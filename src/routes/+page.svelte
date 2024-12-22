@@ -8,7 +8,7 @@
 	let errorMessage = $state('');
 
 	type Theme = 'min-dark' | 'material-theme-darker' | 'aurora-x' | 'ayu-dark' | 'vitesse-dark';
-	const theme: Theme = 'vitesse-dark';
+	const theme: Theme = 'ayu-dark';
 	const codeBlockColor = $derived.by(setCodeBlockColor);
 
 	function setCodeBlockColor(): string {

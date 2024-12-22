@@ -5,6 +5,7 @@
 
 	let schemaInput = $state('');
 	let generatedTypes = $state('');
+	let styledTypes = $state('');
 	let errorMessage = $state('');
 
 	type Theme = 'min-dark' | 'material-theme-darker' | 'aurora-x' | 'ayu-dark' | 'vitesse-dark';
@@ -31,6 +32,7 @@
 	async function handleGeneration() {
 		errorMessage = '';
 		generatedTypes = '';
+		styledTypes = '';
 		const highlighter = await getHighLighter();
 
 		if (!schemaInput) {
@@ -41,14 +43,13 @@
 		try {
 			const processor = new PokeSchema(schemaInput);
 			const types = await processor.generateTypes();
+			generatedTypes = types;
 
 			if (highlighter) {
-				generatedTypes = await highlighter.codeToHtml(types, {
+				styledTypes = await highlighter.codeToHtml(types, {
 					lang: 'typescript',
 					theme
 				});
-			} else {
-				generatedTypes = types;
 			}
 		} catch (err) {
 			if (err instanceof Error) {
@@ -69,7 +70,6 @@
 
 	async function copyFromClipboard() {
 		try {
-			schemaInput = await navigator.clipboard.readText();
 			schemaInput = await navigator.clipboard.readText();
 		} catch (err) {
 			console.error('Failed to read text from clipboard:', err);
@@ -103,11 +103,11 @@
 			<p class="error">{errorMessage}</p>
 		{/if}
 
-		{#if generatedTypes}
+		{#if styledTypes}
 			<section class="output-section">
 				<h3 class="output-heading">Generated Types</h3>
 				<div class="code-block" style="background-color: {codeBlockColor};">
-					{@html generatedTypes}
+					{@html styledTypes}
 				</div>
 				<button class="copy-button" onclick={() => copyToClipboard(generatedTypes)}>
 					Copy Types
